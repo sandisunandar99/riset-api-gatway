@@ -22,11 +22,13 @@ class HandlerGenerator {
     let mockedPassword = '123456';
 
     if (username && password) {
-      if (mockedUsername.includes(mockedUsername) && password === mockedPassword) {
+      if (mockedUsername.includes(username) && password === mockedPassword) {
       // if (username === mockedUsername && password === mockedPassword) {
       
+        let User;
+
         if (username =='admin') {
-          let User = {
+           User = {
             id: 3,
             username: 'admin',
             firstname: 'sandi',
@@ -42,7 +44,7 @@ class HandlerGenerator {
              ]     
           } 
         } else {
-          let User = {
+           User = {
             id: 3,
             username: 'test',
             firstname: 'test',
@@ -132,7 +134,8 @@ function main () {
  
   // Routes & Handlers
   app.post('/login', handlers.login);
-  app.get('/index', middleware.checkToken, handlers.index);
+  app.get('/index', handlers.index);
+  // app.get('/index', middleware.checkToken, handlers.index);
   app.listen(port, () => console.log(`Server is listening on port: ${port}`));
 }
 

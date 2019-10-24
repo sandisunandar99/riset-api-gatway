@@ -1,5 +1,5 @@
 http:
-  port: 8081
+  port: 9090
 admin:
   port: 9876
   host: localhost
@@ -20,10 +20,10 @@ apiEndpoints:
     paths:
       - '/data/*'
     methods: ["GET","POST","PUT","PATCH","DELETE"]
-  test:
+  ip:
     host: 'localhost'
     paths:
-      - '/data/*'
+      - '/ip'
 serviceEndpoints:
   s_login:
     url: 'http://localhost:3001/'
@@ -31,6 +31,8 @@ serviceEndpoints:
     url: 'http://localhost:3002/'
   s_data:
     url: 'http://localhost:3003/'
+  httpbin:
+    url: 'https://httpbin.org'
 policies:
   - jwt
   - basic-auth
@@ -40,14 +42,12 @@ policies:
   # - log
   # - oauth2
   - proxy
-  # - rate-limit
+  - rate-limit
 pipelines:
   pipe_login:
     apiEndpoints:
       - login
     policies:
-    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
-    # - key-auth:
       - proxy:
           - action:
               serviceEndpoint: s_login
@@ -76,27 +76,37 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: s_data
-  pipe_test:
+  pipe_ip:
     apiEndpoints:
-      - test
+      - ip
     policies:
-      - jwt:
+      - rate-limit:
           - action:
-              # secretOrPublicKey: '46cQAqY5xQ4yUmHT9JpHSe'
-              secretOrPublicKey: '0mrqFnsYGMjW2MPrclzvFa'
-              checkCredentialExistence: true
-      - expression:
+              # Limit to 1 per 10 seconds based on the hostname
+              max: 1
+              windowMs: 10000
+              rateLimitBy: "${req.hostname} ${req.headers.test}"
+      - proxy:
           - action:
-              jscode: >
-                  if (req.method !== 'GET') {
-                    res.status(400).send('eittss ga bisa harus GET !');
-                  }
-      - expression:
-          - action:
-              jscode: >
-                  res.json({
-                    sss : 'asdas'
-                  });
+              serviceEndpoint: httpbin
+              changeOrigin: true
+      # - jwt:
+      #     - action:
+      #         # secretOrPublicKey: '46cQAqY5xQ4yUmHT9JpHSe'
+      #         secretOrPublicKey: '0mrqFnsYGMjW2MPrclzvFa'
+      #         checkCredentialExistence: true
+      # - expression:
+      #     - action:
+      #         jscode: >
+      #             if (req.method !== 'GET') {
+      #               res.status(400).send('eittss ga bisa harus GET !');
+      #             }
+      # - expression:
+      #     - action:
+      #         jscode: >
+      #             res.json({
+      #               sss : 'asdas'
+      #             });
 
 
 
