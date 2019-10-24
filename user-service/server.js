@@ -18,13 +18,15 @@ class HandlerGenerator {
     let username = req.body.username;
     let password = req.body.password;
     // For the given username fetch user from DB
-    let mockedUsername = 'admin';
+    let mockedUsername = ['admin', 'test'];
     let mockedPassword = '123456';
 
     if (username && password) {
-      if (username === mockedUsername && password === mockedPassword) {
+      if (mockedUsername.includes(mockedUsername) && password === mockedPassword) {
+      // if (username === mockedUsername && password === mockedPassword) {
       
-        let User = {
+        if (username =='admin') {
+          let User = {
             id: 3,
             username: 'admin',
             firstname: 'sandi',
@@ -38,6 +40,23 @@ class HandlerGenerator {
                {service : 'data', method: ['GET','POST']},
                {service : 'product', method: ['POST']}
              ]     
+          } 
+        } else {
+          let User = {
+            id: 3,
+            username: 'test',
+            firstname: 'test',
+            lastname: 'test',
+             roles:{
+                id: 10,
+                name: 'ketuaRT',
+             },
+            //  permission: ['GET'], //--metode pertama
+             permission: [
+               {service : 'data', method: ['GET','POST']},
+              //  {service : 'product', method: ['POST']}
+             ]     
+          }
         }
 
         /**
