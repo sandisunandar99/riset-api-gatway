@@ -1,0 +1,103 @@
+http:
+  port: 8081
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  login:
+    host: 'localhost'
+    paths:
+      - '/login'
+      - '/index'
+    methods: ["GET","POST"]
+  product:
+    host: 'localhost'
+    paths:
+      - '/product/*'
+    methods: ["GET","POST","PUT","PATCH","DELETE"]
+  data:
+    host: 'localhost'
+    paths:
+      - '/data/*'
+    methods: ["GET","POST","PUT","PATCH","DELETE"]
+  test:
+    host: 'localhost'
+    paths:
+      - '/data/*'
+serviceEndpoints:
+  s_login:
+    url: 'http://localhost:3001/'
+  s_product:
+    url: 'http://localhost:3002/'
+  s_data:
+    url: 'http://localhost:3003/'
+policies:
+  - jwt
+  - basic-auth
+  - cors
+  - expression
+  # - key-auth
+  # - log
+  # - oauth2
+  - proxy
+  # - rate-limit
+pipelines:
+  pipe_login:
+    apiEndpoints:
+      - login
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: s_login
+              changeOrigin: true
+  pipe_posts:
+    apiEndpoints:
+      - product
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: s_product
+  pipe_data:
+    apiEndpoints:
+      - data
+    policies:
+      # - expression:
+      #     - action:
+      #         jscode: >
+      #             if (req.method !== 'GET') {
+      #               res.status(400).send('eitsss ga bisa!!');
+      #             }
+      - jwt:
+          - action:
+              secretOrPublicKey: '0mrqFnsYGMjW2MPrclzvFa'
+              checkCredentialExistence: false
+      - proxy:
+          - action:
+              serviceEndpoint: s_data
+  pipe_test:
+    apiEndpoints:
+      - test
+    policies:
+      - jwt:
+          - action:
+              # secretOrPublicKey: '46cQAqY5xQ4yUmHT9JpHSe'
+              secretOrPublicKey: '0mrqFnsYGMjW2MPrclzvFa'
+              checkCredentialExistence: true
+      - expression:
+          - action:
+              jscode: >
+                  if (req.method !== 'GET') {
+                    res.status(400).send('eittss ga bisa harus GET !');
+                  }
+      - expression:
+          - action:
+              jscode: >
+                  res.json({
+                    sss : 'asdas'
+                  });
+
+
+
+
