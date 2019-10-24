@@ -12,3 +12,8 @@ running semua modul
 ``npm start`` <br>
 *import db.sql ke mysql* <br>
 *jika ada error connection database mysql, edit connectionnya di folder root/connection.js* 
+
+**Step 2** <br>
+untuk tes login 
+`` username : admin `` atau `` username : test`` <br>
+`` password : 123456 ``
