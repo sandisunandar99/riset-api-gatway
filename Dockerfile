@@ -1,6 +1,6 @@
 FROM node
 
-ARG VERSION=latest 
+ARG VERSION=latest
 ARG TYPE=basic
 
 ENV NODE_ENV production

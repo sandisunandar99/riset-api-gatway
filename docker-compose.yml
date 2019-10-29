@@ -8,80 +8,73 @@ services:
             dockerfile: Dockerfile
         ports:
             - "8081:8081"
-            - "9876:9876"
         volumes:
             - ./api-gateway:/app
         networks:
-            - gateway
-        links:
-            - data-service
-            - product-service
-        command: 
-            - nodemon 
-            - .
+            -  microservice-gateway-network
     
     # data-service
-    data-service:
-        build:
-            context: ./data-service
-            dockerfile: Dockerfile
-        ports:
-            - "3003:3003"
-        volumes:
-            - ./data-service:/app
-        networks:
-            - gateway
-        links:
-            - eg_redis
-        command: 
-            - nodemon 
-            - .
+    # data-service:
+    #     build:
+    #         context: ./data-service
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - "3003:3003"
+    #     volumes:
+    #         - ./data-service:/app
+    #     networks:
+    #         - gateway
+    #     links:
+    #         - eg_redis
+    #     command: 
+    #         - nodemon 
+    #         - .
     
-    # product-service
-    product-service:
-        build:
-            context: ./product-service
-            dockerfile: Dockerfile
-        ports:
-            - "3002:3002"
-        volumes:
-            - ./product-service:/app
-        networks:
-            - gateway
-        links:
-            - eg_redis
-        command: 
-            - nodemon 
-            - .
+    # # product-service
+    # product-service:
+    #     build:
+    #         context: ./product-service
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - "3002:3002"
+    #     volumes:
+    #         - ./product-service:/app
+    #     networks:
+    #         - gateway
+    #     links:
+    #         - eg_redis
+    #     command: 
+    #         - nodemon 
+    #         - .
     
-    # user-service
-    user-service:
-        build:
-            context: ./user-service
-            dockerfile: Dockerfile
-        ports:
-            - "3001:3001"
-        volumes:
-            - ./user-service:/app
-        networks:
-            - gateway
-        links:
-            - eg_redis
-        command: 
-            - nodemon 
-            - .
+    # # user-service
+    # user-service:
+    #     build:
+    #         context: ./user-service
+    #         dockerfile: Dockerfile
+    #     ports:
+    #         - "3001:3001"
+    #     volumes:
+    #         - ./user-service:/app
+    #     networks:
+    #         - gateway
+    #     links:
+    #         - eg_redis
+    #     command: 
+    #         - nodemon 
+    #         - .
 
-    # redis database
-    eg_redis:
-        image: redis
-        hostname: redis
-        container_name: redisdocker
-        ports:
-            - "6379:6379"
-        networks:
-            gateway:
-                aliases:
-                   - redis
+    # # redis database
+    # eg_redis:
+    #     image: redis
+    #     hostname: redis
+    #     container_name: redisdocker
+    #     ports:
+    #         - "6379:6379"
+    #     networks:
+    #         gateway:
+    #             aliases:
+    #                - redis
     #express gateway
     # express_gateway:
     #     build: .
@@ -124,4 +117,5 @@ services:
     #     networks:
     #         - gateway 
 networks:
-    gateway:
+  microservice-gateway-network:
+    driver: bridge
