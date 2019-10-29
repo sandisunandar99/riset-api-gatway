@@ -21,7 +21,7 @@ apiEndpoints:
       - '/data/*'
     methods: ["GET","POST","PUT","PATCH","DELETE"]
   ip:
-    host: 'localhost'
+    host: '192.168.88.206'
     paths:
       - '/ip'
 serviceEndpoints:

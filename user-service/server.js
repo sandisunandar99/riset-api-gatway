@@ -39,8 +39,8 @@ class HandlerGenerator {
              },
             //  permission: ['GET'], //--metode pertama
              permission: [
-               {service : 'data', method: ['GET','POST']},
-               {service : 'product', method: ['POST']}
+               {service : 'data', method: ['view_data','create_data','delete_all_data']},
+               {service : 'product', method: ['view_product']}
              ]     
           } 
         } else {
@@ -55,7 +55,7 @@ class HandlerGenerator {
              },
             //  permission: ['GET'], //--metode pertama
              permission: [
-               {service : 'data', method: ['GET','POST']},
+               {service : 'data', method: ['view_data','create_data','delete_one_data']},
               //  {service : 'product', method: ['POST']}
              ]     
           }
@@ -70,7 +70,7 @@ class HandlerGenerator {
         //   }
         // );
 
-        let token = jwt.sign({username: username},
+        let token = jwt.sign({user: User},
           config.secret,
           { expiresIn: '24h' // expires in 24 hours
           }
