@@ -17,8 +17,9 @@ class HandlerGenerator {
 
     let username = req.body.username;
     let password = req.body.password;
-    // For the given username fetch user from DB
-    let mockedUsername = ['admin', 'test'];
+    
+    
+    let mockedUsername = ['provinsi','kecamatan','desa'];
     let mockedPassword = '123456';
 
     if (username && password) {
@@ -27,62 +28,61 @@ class HandlerGenerator {
       
         let User;
 
-        if (username =='admin') {
-           User = {
-            id: 3,
-            username: 'admin',
-            firstname: 'sandi',
-            lastname: 'sunandar',
-             roles:{
-                id: 10,
-                name: 'ketuaRW',
-             },
-            //  permission: ['GET'], //--metode pertama
-             permission: [
-               {service : 'data', method: ['view_data','create_data','delete_all_data']},
-               {service : 'product', method: ['view_product']}
-             ]     
-          } 
-        } else {
-           User = {
-            id: 3,
-            username: 'test',
-            firstname: 'test',
-            lastname: 'test',
-             roles:{
-                id: 10,
-                name: 'ketuaRT',
-             },
-            //  permission: ['GET'], //--metode pertama
-             permission: [
-               {service : 'data', method: ['view_data','create_data','delete_one_data']},
-              //  {service : 'product', method: ['POST']}
-             ]     
-          }
+        switch (username) {
+          case 'provinsi':
+            User = {
+              id: 3,
+              username: 'provinsi',
+              firstname: 'provinsi',
+              lastname: 'provinsi',
+              roles:{ id: 1, name: 'admin',},
+              permission: [
+                {service : 'ALL', method: ['ALL']},
+              ]
+            }
+            break;
+          case 'kecamatan':
+              User = {
+                id: 3,
+                username: 'kecamatan',
+                firstname: 'kecamatan',
+                lastname: 'kecamatan',
+                roles:{ id: 10, name: 'kecamatan',},
+                permission: [
+                  {service : 'data', method: ['view_data','create_data','update_all_data','delete_one_data']},
+                  {service : 'product', method: ['view_product','create_product','delete_one_product']},
+                ]   
+              }
+              break;
+          case 'desa':
+              User = {
+                id: 3,
+                username: 'desa',
+                firstname: 'desa',
+                lastname: 'desa',
+                roles:{ id: 10, name: 'ketuaRT',},
+                permission: [
+                  {service : 'data', method: ['view_data','create_data','delete_one_data']},
+                  {service : 'product', method: ['view_product']}
+                ]    
+              }
+              break;
+          default:
+            break;
         }
 
-        /**
-         * jika generate user info di simpan di token
-         */
-        // let token = jwt.sign(User,
-        //   config.secret,
-        //   { expiresIn: '24h' // expires in 24 hours
-        //   }
-        // );
-
+        // simpan data user di token JWT
         let token = jwt.sign({user: User},
           config.secret,
           { expiresIn: '24h' // expires in 24 hours
           }
         );
       
+        // simpan info user d redis
         client.setex('userid', 3600, JSON.stringify(User));
-        // client.setex('userid:'+User.id, 3600, JSON.stringify(User));
         
-        // app.use(session({
-        //   user: User
-        // }));
 
+        // simpan info user di cookies
         app.use(cookieParser());
         res.cookie('cookieData',User, { maxAge: 900000, httpOnly: true });
       
@@ -93,6 +93,7 @@ class HandlerGenerator {
           user: User,
           token: token
         });
+        
       } else {
         res.sendStatus(403).json({
           success: false,

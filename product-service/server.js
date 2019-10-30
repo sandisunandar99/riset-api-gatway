@@ -47,10 +47,10 @@ class HandlerGenerator {
     let id = req.body.id;
     let product = req.body.product;
     let description = req.body.product;
-    
+    let inputer = req.body.inputer;
     // console.log(id + title + data);
 
-    connection.query('insert into t_product values (?,?,?)',[id,product,description], function(error, rows, field){
+    connection.query('insert into t_product values (?,?,?,?)',[id,product,description,inputer], function(error, rows, field){
       if (error) {
         res.json({
           success: false,
@@ -69,12 +69,83 @@ class HandlerGenerator {
   }
 
   update(req, res){
-      // console.log(req.params);
+        
+      let user = req.decoded;
+      let username = user.user.username;
+      let get_request_method = req.get_request_method;
+
       let id = req.params.id;
       let product = req.body.product;
-      let description = req.body.product;
+      let description = req.body.description;
 
-      connection.query('update t_product set product=?, description=? where id=?',[product,description,id], function(error, rows, field){
+      if (get_request_method ==='update_one_product') {
+        connection.query('update t_product set product=?, description=? where id=? and inputer=?',[product,description,id,username], function(error, rows, field){
+          let get = JSON.stringify(rows);
+          let get2 = JSON.parse(get);
+          
+          if (get2.affectedRows === 0) {
+            res.json({
+              success: false,
+              message: 'silahkan edit data yang hanya milik anda!',
+              data: error
+            });
+          } else {
+            res.json({
+              success: true,
+              message: 'data sukses!',
+              data: 'data berhasil di update!'
+            }); 
+          }
+        });
+      } else {
+        connection.query('update t_product set product=?, description=? where id=?',[product,description,id], function(error, rows, field){
+          if (error) {
+            res.json({
+              success: false,
+              message: 'data error!',
+              data: error
+            });
+          } else {
+            res.json({
+              success: true,
+              message: 'data sukses!',
+              data: 'data berhasil di update!'
+            }); 
+          }
+        }); 
+      }
+  }
+
+  delete(req, res){
+    
+    let user = req.decoded;
+    let username = user.user.username;
+    let get_request_method = req.get_request_method;
+
+    let id = req.params.id;
+
+
+    if (get_request_method ==='delete_one_product') {
+      connection.query('delete from t_product where id=?',[id], function(error, rows, field){
+        let get = JSON.stringify(rows);
+        let get2 = JSON.parse(get);
+
+        if (get2.affectedRows === 0) {
+          res.json({
+            success: false,
+            message: 'silakan hapus data yg hanya milik anda!',
+            data: error
+          });
+        } else {
+          res.json({
+            success: true,
+            message: 'data sukses!',
+            data: 'data berhasil di delete!'
+          }); 
+        }
+      });
+    } else {
+      connection.query('delete from t_product where id=?',[id], function(error, rows, field){
         if (error) {
           res.json({
             success: false,
@@ -85,31 +156,12 @@ class HandlerGenerator {
           res.json({
             success: true,
             message: 'data sukses!',
-            data: 'data berhasil di update!'
+            data: 'data berhasil di delete!'
           }); 
         }
       });
+    }
   }
-
-  delete(req, res){
-    let id = req.params.id;
-
-    connection.query('delete from t_product where id=?',[id], function(error, rows, field){
-      if (error) {
-        res.json({
-          success: false,
-          message: 'data error!',
-          data: error
-        });
-      } else {
-        res.json({
-          success: true,
-          message: 'data sukses!',
-          data: 'data berhasil di delete!'
-        }); 
-      }
-    });
-}
 
 }
 

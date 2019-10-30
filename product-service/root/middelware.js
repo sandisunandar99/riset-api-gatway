@@ -36,48 +36,77 @@ let checkToken = (req, res, next) => {
 
 let checkAuthorize = (req, res, next) =>{
   
-  if (req.decoded) {
-      let Data = req.decoded;
-      let permission = Data.user.permission;
-      let url = req.url;
-      let split = url.split(/[.,\/ -]/);
-      let urlData= split[1]; // ambil pada array ke 1
-      
-      let service = [];
-      let method = [];
+  let perm = {
+    GET: ["view_product"],
+    POST: ["create_product"],
+    PUT: ["update_one_product", "update_all_product"],
+    DELETE: ["delete_one_product", "delete_all_product"]
+  }
 
-      permission.forEach(val => {
-        service.push(val.service);
-        if(val.service == urlData){
-          method = val.method
+
+  if (req.decoded) {
+    let Data = req.decoded;
+    let permission = Data.user.permission;
+    let url = req.url;
+    let split = url.split(/[.,\/ -]/);
+    let urlData= split[1]; // ambil pada array ke 1
+    
+    let service = [];
+    let method = [];
+    let request_method = perm[req.method]; // ambil method dan bandingkan dengan array permission yg telah di definisikan
+    let get_request_method;
+    
+    
+    permission.forEach(val => {
+      // ambil service2 yang terdafta di user
+      service.push(val.service);
+      if(val.service == urlData){
+        // amil method ==> karena method adalah array maka dimasukan kedalam array variable lagi
+        method = val.method
+      }
+    });
+    
+    //ambil request method GET,POST,PUT,DELETE yg telah di convert menjadi nama method
+    //lalu bandingkan dengan methode yang ada di info user 
+    //dan ambil salah satu nya dan simpan di get_request_method
+    request_method.forEach(val =>{
+        if(method.includes(val)){
+          //jika true maka nama method simpan di variable    
+          get_request_method = val;
+          //simpan di reqest agar bisa d panggl global
+          req.get_request_method = val;
         }
-      });
-      
-      if(service.includes(urlData)){
-        if(method.includes(req.method)){
-          next();
-        }else{
-          return res.status(401).json({
-            success: false,
-            message: 'User not authorize'
-          });
-        }
+    });
+
+    if(service.includes(urlData)){
+    
+      if(method.includes(get_request_method)){
+        next();    
       }else{
         return res.status(401).json({
           success: false,
           message: 'User not authorize'
         });
       }
-
-      // console.log(service);
-      // console.log(method);
+    
+    }else{
+      return res.status(401).json({
+        success: false,
+        message: 'User not authorize'
+      });
+    }
 
   } else {
     return res.status(401).json({
             success: false,
             message: 'User not authorize'
-           });
+          });
   }
+
+        // console.log(service); 
+        // console.log(method);
+        // console.log(get_request_method); 
+
 
 
   /**
