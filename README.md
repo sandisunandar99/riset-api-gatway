@@ -15,5 +15,5 @@ running semua modul
 
 **Step 2** <br>
 untuk tes login 
-`` username : admin `` atau `` username : test`` <br>
+`` username : provinsi `` atau ``kecamatan`` atau ``desa`` <br>
 `` password : 123456 ``
