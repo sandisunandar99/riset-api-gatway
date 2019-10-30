@@ -8,4 +8,4 @@ RUN npm i -g nodemon
 
 EXPOSE 8081
 
-CMD [ "nodemon", "-L", "server.js"]
+CMD npm start

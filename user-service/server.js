@@ -60,11 +60,15 @@ class HandlerGenerator {
                 username: 'desa',
                 firstname: 'desa',
                 lastname: 'desa',
-                roles:{ id: 10, name: 'ketuaRT',},
+                roles:{ id: 10, name: 'ketuaRT',id: 11, name: 'ketuaRW'},
                 permission: [
                   {service : 'data', method: ['view_data','create_data','delete_one_data']},
                   {service : 'product', method: ['view_product']}
-                ]    
+                ],  
+                permission: [
+                  {service : 'data', method: ['view_data','create_data']},
+                  {service : 'product', method: ['view_product','add_product']}
+                ],   
               }
               break;
           default:

@@ -28,9 +28,9 @@ serviceEndpoints:
   s_login:
     url: 'http://user-service:3001/'
   s_product:
-    url: 'http://localhost:3002/'
+    url: 'http://product-service:3002/'
   s_data:
-    url: 'http://localhost:3003/'
+    url: 'http://data-service:3003/'
   httpbin:
     url: 'https://httpbin.org'
 policies:
