@@ -4,11 +4,11 @@
 #     emulate: true
 #     namespace: EG
 
-db:
-  redis:
-    host: localhost
-    port: 6379
-    namespace: EG
+# db:
+#   redis:
+#     host: localhost
+#     port: 6379
+#     namespace: EG
 
 #plugins:
   # express-gateway-plugin-example:

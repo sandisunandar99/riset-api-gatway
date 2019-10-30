@@ -1,12 +1,10 @@
-FROM alpine:3.9
-
-ENV NODE_VERSION 12.13.0
+FROM node:10
 
 WORKDIR /app
 
 VOLUME [ "/app" ]
 
-# RUN npm i -g nodemon
+RUN npm i -g nodemon
 
 EXPOSE 3001
 

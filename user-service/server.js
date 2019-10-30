@@ -1,12 +1,12 @@
 const express = require('express');
-const session = require('express-session');
+// const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
 
 
 const jwt = require('jsonwebtoken');
-const redis = require('redis');
-const client = redis.createClient();
+// const redis = require('redis');
+// const client = redis.createClient();
 
 let config = require('./root/config');
 let middleware = require('./root/middelware');
@@ -79,7 +79,7 @@ class HandlerGenerator {
         );
       
         // simpan info user d redis
-        client.setex('userid', 3600, JSON.stringify(User));
+        //client.setex('userid', 3600, JSON.stringify(User));
         
 
         // simpan info user di cookies
