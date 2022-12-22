@@ -7,6 +7,6 @@
   "main": "server.js",
   "dependencies": {
     "express-gateway": "^1.16.9",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^9.0.0"
   }
 }
